@@ -1,0 +1,114 @@
+name: Autograder
+
+on:
+  push:
+    branches: ["**"]
+  workflow_dispatch:
+
+jobs:
+  grade:
+    name: "Grade Submission"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Compile all questions
+        run: |
+          echo "=========================================="
+          echo "  Compiling submissions..."
+          echo "=========================================="
+          FAIL=0
+          for q in q01 q02 q03 q04 q05 q06 q07 q08 q09 q10; do
+            if javac src/$q/Main.java 2>/dev/null; then
+              echo "✅ $q compiled"
+            else
+              echo "❌ $q compile FAILED"
+              FAIL=1
+            fi
+          done
+          if [ $FAIL -eq 1 ]; then echo "Fix compilation errors first." && exit 1; fi
+
+      - name: Q01 — Hollow Diamond Pattern
+        run: |
+          cp .grader/q01/Grader.java .
+          javac -cp src/q01 Grader.java
+          java -cp .:src/q01 Grader
+        continue-on-error: true
+
+      - name: Q02 — Pascal's Triangle
+        run: |
+          cp .grader/q02/Grader.java .
+          javac -cp src/q02 Grader.java
+          java -cp .:src/q02 Grader
+        continue-on-error: true
+
+      - name: Q03 — Spiral Matrix
+        run: |
+          cp .grader/q03/Grader.java .
+          javac -cp src/q03 Grader.java
+          java -cp .:src/q03 Grader
+        continue-on-error: true
+
+      - name: Q04 — Prime and Perfect Numbers
+        run: |
+          cp .grader/q04/Grader.java .
+          javac -cp src/q04 Grader.java
+          java -cp .:src/q04 Grader
+        continue-on-error: true
+
+      - name: Q05 — Shape Area
+        run: |
+          cp .grader/q05/Grader.java .
+          javac -cp src/q05 Grader.java
+          java -cp .:src/q05 Grader
+        continue-on-error: true
+
+      - name: Q06 — Fibonacci Series
+        run: |
+          cp .grader/q06/Grader.java .
+          javac -cp src/q06 Grader.java
+          java -cp .:src/q06 Grader
+        continue-on-error: true
+
+      - name: Q07 — Bubble Sort with Swap Count
+        run: |
+          cp .grader/q07/Grader.java .
+          javac -cp src/q07 Grader.java
+          java -cp .:src/q07 Grader
+        continue-on-error: true
+
+      - name: Q08 — Stack Implementation
+        run: |
+          cp .grader/q08/Grader.java .
+          javac -cp src/q08 Grader.java
+          java -cp .:src/q08 Grader
+        continue-on-error: true
+
+      - name: Q09 — Matrix Multiplication
+        run: |
+          cp .grader/q09/Grader.java .
+          javac -cp src/q09 Grader.java
+          java -cp .:src/q09 Grader
+        continue-on-error: true
+
+      - name: Q10 — Postfix Expression Evaluator
+        run: |
+          cp .grader/q10/Grader.java .
+          javac -cp src/q10 Grader.java
+          java -cp .:src/q10 Grader
+        continue-on-error: true
+
+      - name: Final Score
+        run: |
+          echo "=========================================="
+          echo "  Check each step above for your results"
+          echo "  ✅ = PASS   ❌ = FAIL"
+          echo "=========================================="
